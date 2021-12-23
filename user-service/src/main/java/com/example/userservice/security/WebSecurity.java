@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.servlet.Filter;
-
 @Configuration
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -28,9 +26,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests().antMatchers("/**")
-                .hasIpAddress("172.30.1.35")
-                .and()
-                .addFilter(getAuthenticationFiler());
+                .permitAll()
+                .and().addFilter(getAuthenticationFiler());
+
         http.headers().frameOptions().disable();
     }
 
