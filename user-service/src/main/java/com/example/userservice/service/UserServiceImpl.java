@@ -1,5 +1,6 @@
 package com.example.userservice.service;
 
+import com.example.userservice.client.OrderServiceClient;
 import com.example.userservice.dto.UserDTO;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
@@ -23,11 +24,15 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
+    private OrderServiceClient orderServiceClient;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           BCryptPasswordEncoder passwordEncoder,
+                           OrderServiceClient orderServiceClient) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.orderServiceClient = orderServiceClient;
     }
 
     @Override
@@ -55,8 +60,9 @@ public class UserServiceImpl implements UserService {
         }
 
         UserDTO userDTO = new ModelMapper().map(userEntity, UserDTO.class);
-        List<ResponseOrder> orders = new ArrayList<>();
-        userDTO.setOrders(orders);
+
+        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+        userDTO.setOrders(orderList);
 
         return userDTO;
     }
