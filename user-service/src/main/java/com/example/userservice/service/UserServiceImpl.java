@@ -62,12 +62,7 @@ public class UserServiceImpl implements UserService {
 
         UserDTO userDTO = new ModelMapper().map(userEntity, UserDTO.class);
 
-        List<ResponseOrder> orderList = null;
-        try {
-            orderList = orderServiceClient.getOrders(userId);
-        } catch(FeignException e) {
-            log.error(e.getMessage());
-        }
+        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
         userDTO.setOrders(orderList);
 
         return userDTO;
